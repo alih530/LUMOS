@@ -1,7 +1,8 @@
 Computer Organization - Spring 2024
 ==============================================================
 ## Iran Univeristy of Science and Technology
-## Assignment 1: Assembly code execution on phoeniX RISC-V core
+## LUMOS
+LUMOS is a multicycle RISC-V processor that implements a subset of RV32I instruction set, designed for educational use in computer organization classes at Iran University of Science and Technology. It allows for modular design projects, enabling students to gain hands-on experience with processor architecture.
 
 - Name: Ali Hemmati
 - Team Members: Amirhosein Sharifi , Abdolah Khalaj
