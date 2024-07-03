@@ -1,48 +1,60 @@
-<img src="https://github.com/IUST-Computer-Organization/.github/blob/main/images/CompOrg_orange.png" alt="Image" width="85" height="85" style="vertical-align:middle"> LUMOS RISC-V
-=================================
-> Light Utilization with Multicycle Operational Stages (LUMOS) RISC-V Processor Core
+Computer Organization - Spring 2024
+==============================================================
+## Iran Univeristy of Science and Technology
+## Assignment 1: Assembly code execution on phoeniX RISC-V core
 
-<div align="justify">
+- Name: Ali Hemmati
+- Team Members: Amirhosein Sharifi , Abdolah Khalaj
+- Student ID: 400414012
+- Date: 1403/4/12
 
-## Introduction
+## Report
 
-**LUMOS** is a multicycle RISC-V processor that implements a subset of `RV32I` instruction set, designed for educational use in computer organization classes at **Iran University of Science and Technology**. It allows for modular design projects, enabling students to gain hands-on experience with processor architecture.
+- Radical
+This code implements a simplified version of the Newton-Raphson algorithm for approximating the square root of a positive number. The algorithm iteratively refines an initial guess to converge towards a more accurate estimate of the square root.
 
-## Features
+Here’s how the code works:
 
-- LUMOS executes instructions in multiple stages, such as `instruction_fetch`, `fetch_wait`, `fetch_done`, `decode`, `execute`, `memory_access`, and etc. This approach allows for more complex operations and better utilization of processor resources compared to single-cycle designs. This processor does not support the entire `RV32I` instruction set, which is the base integer instruction set of RISC-V. Instead, it focuses on a subset of instructions that are essential for educational purposes and demonstrating the principles of computer architecture.
+It defines several registers (reg) to store intermediate values:
+root: The current estimate of the square root.
+root_ready: A flag indicating whether the root calculation is complete.
+CopyOprand1: A copy of the input operand (Operand1).
+pair: A two-bit register storing the most significant bits of CopyOprand1.
+Iteration: The number of iterations (set to 16 in this code).
+radicand: An intermediate value used in the calculation.
+Subb1: An intermediate value representing root << 2 + 1.
+SubResult: The result of the subtraction operation.
+co_SubResult: A temporary storage for SubResult.
+The always @(*) block is a combinational logic block that executes whenever any of its inputs change.
+Inside the loop (for (i = 0; i < Iteration; i = i + 1)):
+It extracts the two most significant bits of CopyOprand1 and stores them in pair.
+Calculates radicand by shifting SubResult left by 2 and adding pair.
+Calculates Subb1 by shifting root left by 2 and adding 1.
+Updates SubResult by subtracting Subb1 from radicand.
+If SubResult is non-zero, it updates root by shifting it left by 1 and adding 1; otherwise, it only shifts root left by 1.
+Finally, CopyOprand1 is shifted left by 2 for the next iteration.
+The result of this process is an approximation of the square root stored in root.
+- Multiply
+This code represents a hardware multiplier circuit that computes the product of two 64-bit operands (operand_1 and operand_2). Let’s break down how it works:
 
-- The processor is designed with modularity in mind, allowing students to work on various components of the processor. As part of their course projects, students will design different execution units, such as FPUs, control units, memory interfaces, and other modules that are integral to the processor's functionality.
-
-## LUMOS Datapath
-
-In a multicycle implementation, we can break down each instruction into a series of steps corresponding to the functional unit operations that are needed. These steps can be used to create a multi-cycle implementation. In this architecture, each step will take 1 clock cycle. This allows that components in the design and different functional units to be used more than once per instruction, as long as it is used on different clock cycles. This sharing of resources can help reduce the amount of hardware required. This classic view of CPU design partitions the design of a processor into data path design and control design. Data path design focuses on the design of ALU and other functional units as well as accessing the registers and memory. Control path design focuses on the design of the state machines to decode instructions and generate the sequence of control signals necessary to appropriately manipulate the data path.
-
-![Alt text](https://github.com/IUST-Computer-Organization/LUMOS/blob/main/Images/Datapath_1.png "LUMOS Datapath Section 1")
-![Alt text](https://github.com/IUST-Computer-Organization/LUMOS/blob/main/Images/Datapath_2.png "LUMOS Datapath Section 2")
-![Alt text](https://github.com/IUST-Computer-Organization/LUMOS/blob/main/Images/Datapath_3.png "LUMOS Datapath Section 3")
-
-## Synthesis
-
-This processor core is synthesizable in the 45nm CMOS technology node. LUMOS has gone through the RTL-to-GDS flow using *Synopsys Design Compiler* and *Cadence SoC Encounter* tools. At this node, the core can achieve a frequency of **500MHz** while occupying **12000um2** of area and consuming around **3mw** of power.
-</div>
-
-<!-- ![Alt text](https://github.com/IUST-Computer-Organization/LUMOS/blob/main/LUMOS.png "The LUMOS microprocessor synthesized with Design Compiler and placed and routed by Cadence Encounter" =300x300)  -->
-
-<picture>
-    <img 
-        alt="The LUMOS microprocessor synthesized with Design Compiler and placed and routed by Cadence Encounter" 
-        src="https://github.com/IUST-Computer-Organization/LUMOS/blob/main/Images/LUMOS.png"
-        width="550" 
-        height="550"
-    > 
-</picture> 
-
-
-## Copyright
-
-Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
-
-Copyright 2024 Iran University of Science and Technology - iustCompOrg@gmail.com  
-
-</div>
+Input Preparation:
+The code splits each 64-bit operand into two 32-bit halves (multiplierCircuitInput1L, multiplierCircuitInput1H, multiplierCircuitInput2L, and multiplierCircuitInput2H).
+The lower 16 bits of operand_1 are stored in multiplierCircuitInput1L, and the upper 16 bits are stored in multiplierCircuitInput1H.
+Similarly, the lower 16 bits of operand_2 are stored in multiplierCircuitInput2L, and the upper 16 bits are stored in multiplierCircuitInput2H.
+Multiplier Circuits:
+Four instances of a multiplier circuit (multiplier_circuit1, multiplier_circuit2, multiplier_circuit3, and multiplier_circuit4) are instantiated.
+Each multiplier circuit takes two 16-bit inputs and produces a 32-bit product (multiplierCircuitResult1, multiplierCircuitResult2, multiplierCircuitResult3, and multiplierCircuitResult4).
+Partial Products:
+Four partial products (partialProduct1, partialProduct2, partialProduct3, and partialProduct4) are initialized to zero.
+In the always (*) block:
+The results from each multiplier circuit are added to their corresponding partial products.
+The lower 32 bits of each result are stored in the partial product.
+The upper 32 bits of each result are shifted left by 16 or 32 bits and added to the partial product.
+Final Product:
+The final product (product) is obtained by summing up all four partial products.
+The product_ready flag is set to indicate that the product calculation is complete.
+Note:
+The code snippet is incomplete (missing module definitions, port connections, and other details).
+You would need to complete the missing parts (e.g., define the Multiplier module) and ensure proper connections for this code to function correctly.
+- Result Img
+![Result](Result.png)
