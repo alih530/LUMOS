@@ -6,7 +6,7 @@ LUMOS is a multicycle RISC-V processor that implements a subset of RV32I instruc
 
 - Name: Ali Hemmati
 - Team Members: Amirhosein Sharifi , Abdolah Khalaj
-- Student ID: 400414012
+- Student ID: 400414012 , ۴۰۰۴۱۲۳۵۵ , 400412004
 - Date: 1403/4/12
 
 ## Report
